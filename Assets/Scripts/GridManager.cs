@@ -214,7 +214,7 @@ public class GridManager : MonoBehaviour
 
                 ClearAllMatches();
                 StartCoroutine(Fill());
-               level.OnMove();
+                level.OnMove();
             }
             else
             {

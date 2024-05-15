@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startLetter: 0
-  endLetter: 0
+  endLetter: 5
   xDim: 5
   yDim: 6
   fillTime: 0.3
