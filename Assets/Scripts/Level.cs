@@ -19,7 +19,7 @@ public class Level : MonoBehaviour
     public int scoreSecondStar;
     public int scoreThirdStar;
 
-    protected int currentScore;
+    public int currentScore;
 
     protected LevelType type;
 
