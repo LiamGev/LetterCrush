@@ -125,9 +125,9 @@ public class GridManager : MonoBehaviour
     {
         bool movedPiece = false;
 
-        for(int y = yDim-2; y >=0; y--)
+        for (int y = yDim - 2; y >= 0; y--)
         {
-            for(int x = 0; x < xDim; x++)
+            for (int x = 0; x < xDim; x++)
             {
                 GamePiece piece = pieces[x, y];
 
@@ -135,7 +135,7 @@ public class GridManager : MonoBehaviour
                 {
                     GamePiece pieceBelow = pieces[x, y + 1];
 
-                    if(pieceBelow.Type == PieceType.EMPTY)
+                    if (pieceBelow.Type == PieceType.EMPTY)
                     {
                         Destroy(pieceBelow.gameObject);
                         piece.MoveablePiece.Move(x, y + 1, fillTime);
@@ -147,11 +147,11 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        for( int x = 0; x <xDim; x++)
+        for (int x = 0; x < xDim; x++)
         {
             GamePiece pieceBelow = pieces[x, 0];
 
-            if(pieceBelow.Type == PieceType.EMPTY)
+            if (pieceBelow.Type == PieceType.EMPTY)
             {
                 Destroy(pieceBelow.gameObject);
                 GameObject newPiece = Instantiate(prefabDict[PieceType.A], GetWorldPosition(x, -1), Quaternion.identity);
@@ -160,14 +160,99 @@ public class GridManager : MonoBehaviour
                 pieces[x, 0] = newPiece.GetComponent<GamePiece>();
                 pieces[x, 0].Init(x, -1, this, PieceType.A);
                 pieces[x, 0].MoveablePiece.Move(x, 0, fillTime);
-                pieces[x, 0].LetterComponent.SetLetter((LetterPiece.LetterType)Random.Range(0, 5)); // Set random Range to Random.Range(0, pieces[x,y].LetterComponent.NumLetters)
+                pieces[x, 0].LetterComponent.SetLetter((LetterPiece.LetterType)Random.Range(0, 5)); // Set random letter
                 movedPiece = true;
             }
         }
 
+        // Ensure that there are possible matches after refilling
+        EnsureMatchesPossible();
+
         return movedPiece;
     }
-    
+
+    private void EnsureMatchesPossible()
+    {
+        // Check if there are any possible matches
+        for (int x = 0; x < xDim; x++)
+        {
+            for (int y = 0; y < yDim; y++)
+            {
+                GamePiece piece = pieces[x, y];
+
+                if (piece.IsLetter())
+                {
+                    // Check adjacent pieces for possible matches
+                    if ((x < xDim - 1 && SimulateSwapAndCheck(piece, pieces[x + 1, y])) || // Check right
+                        (y < yDim - 1 && SimulateSwapAndCheck(piece, pieces[x, y + 1])))   // Check down
+                    {
+                        return; // If a match is possible, return
+                    }
+                }
+            }
+        }
+
+        // If no possible matches, adjust the grid to create one
+        CreateForcedMatch();
+    }
+
+    private void CreateForcedMatch()
+    {
+        // Find two adjacent pieces and force a match by swapping their letters
+        for (int x = 0; x < xDim - 1; x++)
+        {
+            for (int y = 0; y < yDim - 1; y++)
+            {
+                if (pieces[x, y].IsLetter() && pieces[x + 1, y].IsLetter())
+                {
+                    // Swap letters of two adjacent pieces
+                    SwapLetters(pieces[x, y], pieces[x + 1, y]);
+                    return;
+                }
+                if (pieces[x, y].IsLetter() && pieces[x, y + 1].IsLetter())
+                {
+                    // Swap letters of two adjacent pieces
+                    SwapLetters(pieces[x, y], pieces[x, y + 1]);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void SwapLetters(GamePiece piece1, GamePiece piece2)
+    {
+        // Swap the letters of two pieces to create a match
+        LetterPiece.LetterType tempLetter = piece1.LetterComponent.Letter;
+        piece1.LetterComponent.SetLetter(piece2.LetterComponent.Letter);
+        piece2.LetterComponent.SetLetter(tempLetter);
+    }
+
+    private bool SimulateSwapAndCheck(GamePiece piece1, GamePiece piece2)
+    {
+        // Simulate the swap
+        SimulateSwapPieces(piece1, piece2);
+
+        // Check if the swap results in a match
+        bool matchFound = GetMatch(piece1, piece1.X, piece1.Y) != null || GetMatch(piece2, piece2.X, piece2.Y) != null;
+
+        // Swap back the pieces
+        SimulateSwapPieces(piece1, piece2);
+
+        return matchFound;
+    }
+
+    private void SimulateSwapPieces(GamePiece piece1, GamePiece piece2)
+    {
+        // Temporarily swap the coordinates of two pieces for match checking
+        int tempX = piece1.X;
+        int tempY = piece1.Y;
+        piece1.X = piece2.X;
+        piece1.Y = piece2.Y;
+        piece2.X = tempX;
+        piece2.Y = tempY;
+    }
+
+
     public Vector2 GetWorldPosition(int x, int y)
     {
         return new Vector2(transform.position.x - xDim / 2.0f + x, transform.position.y + yDim / 2.0f - y);
