@@ -184,7 +184,9 @@ public class GridManager : MonoBehaviour
                 {
                     // Check adjacent pieces for possible matches
                     if ((x < xDim - 1 && SimulateSwapAndCheck(piece, pieces[x + 1, y])) || // Check right
-                        (y < yDim - 1 && SimulateSwapAndCheck(piece, pieces[x, y + 1])))   // Check down
+                        (y < yDim - 1 && SimulateSwapAndCheck(piece, pieces[x, y + 1])) || // Check down
+                        (x > 0 && SimulateSwapAndCheck(piece, pieces[x - 1, y])) || // Check left
+                        (y > 0 && SimulateSwapAndCheck(piece, pieces[x, y - 1])))   // Check up
                     {
                         return; // If a match is possible, return
                     }
@@ -195,6 +197,7 @@ public class GridManager : MonoBehaviour
         // If no possible matches, adjust the grid to create one
         CreateForcedMatch();
     }
+
 
     private void CreateForcedMatch()
     {
@@ -227,6 +230,7 @@ public class GridManager : MonoBehaviour
         piece2.LetterComponent.SetLetter(tempLetter);
     }
 
+
     private bool SimulateSwapAndCheck(GamePiece piece1, GamePiece piece2)
     {
         // Simulate the swap
@@ -250,7 +254,12 @@ public class GridManager : MonoBehaviour
         piece1.Y = piece2.Y;
         piece2.X = tempX;
         piece2.Y = tempY;
+
+        // Swap pieces in the array
+        pieces[piece1.X, piece1.Y] = piece1;
+        pieces[piece2.X, piece2.Y] = piece2;
     }
+
 
 
     public Vector2 GetWorldPosition(int x, int y)
