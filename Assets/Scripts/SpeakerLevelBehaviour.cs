@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpeakerLevelBehaviour : MonoBehaviour
 {
@@ -8,20 +9,27 @@ public class SpeakerLevelBehaviour : MonoBehaviour
     public int goal;
     int streak = 0;
     int answer;
+    public Slider progress;
+    
+
 
     string selectedAudio;
 
     // Start is called before the first frame update
     void Start()
     {
+        progress.maxValue = goal;
         selectSound();
         playSound();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(streak == goal)
+        progress.value = streak;
+
+        if (streak == goal)
         {
             Debug.Log("level completed");
         }
@@ -70,6 +78,7 @@ public class SpeakerLevelBehaviour : MonoBehaviour
             {
                 selectSound();
                 playSound();
+                
             }
 
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Level : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class Level : MonoBehaviour
     public int scoreSecondStar;
     public int scoreThirdStar;
 
+    public Slider progress;
+
     protected int currentScore;
 
     protected LevelType type;
@@ -31,6 +34,7 @@ public class Level : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        progress.maxValue = scoreThirdStar;
         hud.setScore(currentScore);
         
     }
@@ -42,6 +46,7 @@ public class Level : MonoBehaviour
         {
             GameWin();
         }
+        progress.value = currentScore;
         
     }
 
