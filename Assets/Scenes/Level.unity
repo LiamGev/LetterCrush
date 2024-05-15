@@ -220,7 +220,7 @@ MonoBehaviour:
   endLetter: 5
   xDim: 5
   yDim: 6
-  fillTime: 0.1
+  fillTime: 0.3
   level: {fileID: 607573325}
   piecePrefabs:
   - type: 3
