@@ -186,8 +186,10 @@ public class GridManager : MonoBehaviour
 
     public bool IsAdjacent(GamePiece pieceFirst, GamePiece pieceSecond)
     {
-        return (pieceFirst.X == pieceSecond.X && (int)Mathf.Abs(pieceFirst.Y - pieceSecond.Y) == 1)|| (pieceFirst.Y == pieceSecond.Y && (int)Mathf.Abs(pieceFirst.X - pieceSecond.X) == 1);
+        return (pieceFirst.X == pieceSecond.X && Mathf.Abs(pieceFirst.Y - pieceSecond.Y) == 1) ||
+               (pieceFirst.Y == pieceSecond.Y && Mathf.Abs(pieceFirst.X - pieceSecond.X) == 1);
     }
+
 
     public void Swap(GamePiece pieceFirst, GamePiece pieceSecond)
     {
@@ -240,7 +242,7 @@ public class GridManager : MonoBehaviour
             Swap(pressedPiece, enteredPiece);
         }
     }
-    
+
     public List<GamePiece> GetMatch(GamePiece piece, int newX, int newY)
     {
         if (piece.IsLetter())
@@ -251,30 +253,20 @@ public class GridManager : MonoBehaviour
             List<GamePiece> matching = new List<GamePiece>();
 
             // Horizontal
-
             horizontal.Add(piece);
 
-            for(int dir = 0; dir <= 1; dir++)
+            for (int dir = 0; dir <= 1; dir++)
             {
-                for(int xOffSet = 1; xOffSet < xDim; xOffSet++)
+                for (int xOffset = 1; xOffset < xDim; xOffset++)
                 {
-                    int x;
+                    int x = (dir == 0) ? newX - xOffset : newX + xOffset;
 
-                    if(dir == 0)
-                    { //left
-                        x = newX - xOffSet;
-                    }
-                    else
-                    { //right
-                        x = newX + xOffSet;
-                    }
-
-                    if(x < 0 || x >= xDim)
+                    if (x < 0 || x >= xDim)
                     {
                         break;
                     }
 
-                    if (pieces[x,newY].IsLetter() && pieces[x, newY].LetterComponent.Letter == letter)
+                    if (pieces[x, newY].IsLetter() && pieces[x, newY].LetterComponent.Letter == letter)
                     {
                         horizontal.Add(pieces[x, newY]);
                     }
@@ -285,66 +277,57 @@ public class GridManager : MonoBehaviour
                 }
             }
 
-            if(horizontal.Count >= 3)
+            if (horizontal.Count >= 3)
             {
-                for(int i = 0; i <horizontal.Count; i++)
-                {
-                    matching.Add(horizontal[i]);
-                }
+                matching.AddRange(horizontal);
             }
 
             if (horizontal.Count >= 3)
             {
-                foreach (var horizontalPiece in horizontal.ToList()) // Iterate over each horizontal piece
+                foreach (var horizontalPiece in horizontal)
                 {
-                    vertical.Clear(); // Clear the vertical list for each horizontal piece
-
-                    // Check vertically in both directions
-                    for (int dir = -1; dir <= 1; dir += 2) // Loop for up (-1) and down (1) directions
+                    for (int dir = -1; dir <= 1; dir += 2)
                     {
-                        // Temporary list for storing matching pieces in each direction
                         List<GamePiece> tempVertical = new List<GamePiece>();
 
-                        // Iterate over adjacent pieces vertically
                         for (int yOffset = 1; yOffset < yDim; yOffset++)
                         {
-                            int y = horizontalPiece.Y + dir * yOffset; // Calculate y-coordinate for the adjacent piece
+                            int y = horizontalPiece.Y + dir * yOffset;
 
-                            if (y < 0 || y >= yDim) // Check if y-coordinate is out of bounds
+                            if (y < 0 || y >= yDim)
                             {
-                                break; // Exit loop if out of bounds
+                                break;
                             }
 
-                            // Check if the adjacent piece is a letter piece and has the same letter
                             if (pieces[horizontalPiece.X, y].IsLetter() && pieces[horizontalPiece.X, y].LetterComponent.Letter == letter)
                             {
-                                tempVertical.Add(pieces[horizontalPiece.X, y]); // Add matching piece to the temporary list
+                                tempVertical.Add(pieces[horizontalPiece.X, y]);
                             }
                             else
                             {
-                                break; // Exit loop if adjacent piece does not match
+                                break;
                             }
                         }
 
-                        // Check if the number of matching pieces in this direction is sufficient
                         if (tempVertical.Count >= 2)
                         {
-                            vertical.AddRange(tempVertical); // Add matching pieces to the vertical list
+                            vertical.Add(horizontalPiece); // Add the original horizontal piece if a vertical match is found
+                            vertical.AddRange(tempVertical);
+
+                            bool sameLetter = vertical.All(p => p.LetterComponent.Letter == letter);
+
+                            if (sameLetter)
+                            {
+                                matching.AddRange(vertical);
+                                break; // Break to avoid redundant checks
+                            }
+                            else
+                            {
+                                vertical.Clear(); // Clear if letters don't match
+                            }
                         }
                     }
-
-                    // Check if the total number of matching pieces vertically is sufficient
-                    if (vertical.Count >= 2)
-                    {
-                        matching.AddRange(vertical); // Add all vertical matching pieces to the final list
-                        break; // Exit loop if matching pieces are found
-                    }
                 }
-            }
-
-            if (matching.Count >= 3)
-            {
-                return matching;
             }
 
             // Vertical
@@ -354,18 +337,9 @@ public class GridManager : MonoBehaviour
 
             for (int dir = 0; dir <= 1; dir++)
             {
-                for (int yOffSet = 1; yOffSet < yDim; yOffSet++)
+                for (int yOffset = 1; yOffset < yDim; yOffset++)
                 {
-                    int y;
-
-                    if (dir == 0)
-                    { //up
-                        y = newY- yOffSet;
-                    }
-                    else
-                    { //down
-                        y = newX + yOffSet;
-                    }
+                    int y = (dir == 0) ? newY - yOffset : newY + yOffset;
 
                     if (y < 0 || y >= yDim)
                     {
@@ -385,83 +359,83 @@ public class GridManager : MonoBehaviour
 
             if (vertical.Count >= 3)
             {
-                for (int i = 0; i < vertical.Count; i++)
-                {
-                    matching.Add(vertical[i]);
-                }
+                matching.AddRange(vertical);
             }
 
             if (vertical.Count >= 3)
             {
-                foreach (var verticalPiece in vertical.ToList())
+                foreach (var verticalPiece in vertical)
                 {
-                    horizontal = new List<GamePiece>(); // Initialize list for horizontal matching pieces
-
-                    // Check horizontally in both directions
-                    for (int dir = -1; dir <= 1; dir += 2) // Loop for left (-1) and right (1) directions
+                    for (int dir = -1; dir <= 1; dir += 2)
                     {
-                        List<GamePiece> tempHorizontal = new List<GamePiece>(); // Temporary list for storing matching pieces in each direction
+                        List<GamePiece> tempHorizontal = new List<GamePiece>();
 
-                        for (int xOffset = 1; xOffset < xDim; xOffset++) // Iterate over adjacent pieces
+                        for (int xOffset = 1; xOffset < xDim; xOffset++)
                         {
-                            int x = verticalPiece.X + dir * xOffset; // Calculate x-coordinate for the adjacent piece
+                            int x = verticalPiece.X + dir * xOffset;
 
-                            if (x < 0 || x >= xDim) // Check if x-coordinate is out of bounds
+                            if (x < 0 || x >= xDim)
                             {
-                                break; // Exit loop if out of bounds
+                                break;
                             }
 
-                            // Check if the adjacent piece is a letter piece and has the same letter
                             if (pieces[x, verticalPiece.Y].IsLetter() && pieces[x, verticalPiece.Y].LetterComponent.Letter == letter)
                             {
-                                tempHorizontal.Add(pieces[x, verticalPiece.Y]); // Add matching piece to the temporary list
+                                tempHorizontal.Add(pieces[x, verticalPiece.Y]);
                             }
                             else
                             {
-                                break; // Exit loop if adjacent piece does not match
+                                break;
                             }
                         }
 
-                        // Check if the number of matching pieces in this direction is sufficient
                         if (tempHorizontal.Count >= 2)
                         {
-                            horizontal.AddRange(tempHorizontal); // Add matching pieces to the horizontal list
-                        }
-                    }
+                            horizontal.Add(verticalPiece); // Add the original vertical piece if a horizontal match is found
+                            horizontal.AddRange(tempHorizontal);
 
-                    // Check if the total number of matching pieces horizontally is sufficient
-                    if (horizontal.Count >= 2)
-                    {
-                        matching.AddRange(horizontal); // Add all horizontal matching pieces to the final list
+                            bool sameLetter = horizontal.All(p => p.LetterComponent.Letter == letter);
+
+                            if (sameLetter)
+                            {
+                                matching.AddRange(horizontal);
+                                break; // Break to avoid redundant checks
+                            }
+                            else
+                            {
+                                horizontal.Clear(); // Clear if letters don't match
+                            }
+                        }
                     }
                 }
             }
 
             if (matching.Count >= 3)
             {
-                return matching;
+                return matching.Distinct().ToList();
             }
-
         }
         return null;
     }
 
+
     public bool ClearAllMatches()
     {
         bool needsFill = false;
-        
-        for(int y = 0; y <yDim; y++) { 
-            for(int x = 0; x <xDim; x++)
+
+        for (int y = 0; y < yDim; y++)
+        {
+            for (int x = 0; x < xDim; x++)
             {
                 if (pieces[x, y].IsClearable())
                 {
                     List<GamePiece> match = GetMatch(pieces[x, y], x, y);
 
-                    if (match != null)
+                    if (match != null && match.Count >= 3)
                     {
-                        for(int i = 0; i <match.Count; i++)
+                        foreach (GamePiece piece in match)
                         {
-                            if (ClearPiece(match[i].X, match[i].Y))
+                            if (ClearPiece(piece.X, piece.Y))
                             {
                                 needsFill = true;
                             }
@@ -472,6 +446,7 @@ public class GridManager : MonoBehaviour
         }
         return needsFill;
     }
+
 
     public bool ClearPiece(int x, int y)
     {
