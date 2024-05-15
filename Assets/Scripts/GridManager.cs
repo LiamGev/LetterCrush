@@ -28,6 +28,9 @@ public class GridManager : MonoBehaviour
         public int y;
     }
 
+    public int startLetter;
+    public int endLetter;
+
     public int xDim;
     public int yDim;
     public float fillTime;
@@ -160,7 +163,7 @@ public class GridManager : MonoBehaviour
                 pieces[x, 0] = newPiece.GetComponent<GamePiece>();
                 pieces[x, 0].Init(x, -1, this, PieceType.A);
                 pieces[x, 0].MoveablePiece.Move(x, 0, fillTime);
-                pieces[x, 0].LetterComponent.SetLetter((LetterPiece.LetterType)Random.Range(0, 5)); // Set random Range to Random.Range(0, pieces[x,y].LetterComponent.NumLetters)
+                pieces[x, 0].LetterComponent.SetLetter((LetterPiece.LetterType)Random.Range(startLetter, endLetter)); // Set random Range to Random.Range(0, pieces[x,y].LetterComponent.NumLetters)
                 movedPiece = true;
             }
         }

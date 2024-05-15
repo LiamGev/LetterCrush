@@ -216,8 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a178bee90772b34c9d67e6be1ad66ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startLetter: 0
-  endLetter: 0
+  startLetter: 15
+  endLetter: 20
   xDim: 5
   yDim: 6
   fillTime: 0.3
