@@ -10,6 +10,7 @@ public class SpeakerLevelBehaviour : MonoBehaviour
     int streak = 0;
     int answer;
     public Slider progress;
+    public GameObject EndScreen;
     
 
 
@@ -19,6 +20,7 @@ public class SpeakerLevelBehaviour : MonoBehaviour
     void Start()
     {
         progress.maxValue = goal;
+        EndScreen.SetActive(false);
         selectSound();
         playSound();
 
@@ -31,6 +33,7 @@ public class SpeakerLevelBehaviour : MonoBehaviour
 
         if (streak == goal)
         {
+            EndScreen.SetActive(true);
             Debug.Log("level completed");
         }
     }

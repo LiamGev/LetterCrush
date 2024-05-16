@@ -15,6 +15,8 @@ public class Level : MonoBehaviour
     public GridManager grid;
     public HUD hud;
 
+    public GameObject EndScreen;
+
 
     public int scoreStar;
     public int scoreSecondStar;
@@ -36,6 +38,7 @@ public class Level : MonoBehaviour
     {
         progress.maxValue = scoreThirdStar;
         hud.setScore(currentScore);
+        EndScreen.SetActive(false);
         
     }
 
@@ -44,6 +47,7 @@ public class Level : MonoBehaviour
     {
         if(currentScore >= scoreThirdStar)
         {
+            EndScreen.SetActive(true);
             GameWin();
         }
         progress.value = currentScore;

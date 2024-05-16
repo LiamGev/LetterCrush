@@ -55,3 +55,6 @@ TagManager:
   - name: piece
     uniqueID: 3754102297
     locked: 0
+  - name: endscreen
+    uniqueID: 885595561
+    locked: 0
