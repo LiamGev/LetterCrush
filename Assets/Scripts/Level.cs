@@ -17,7 +17,6 @@ public class Level : MonoBehaviour
 
     public GameObject EndScreen;
 
-
     public int scoreStar;
     public int scoreSecondStar;
     public int scoreThirdStar;
