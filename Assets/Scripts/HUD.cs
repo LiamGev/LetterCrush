@@ -7,12 +7,12 @@ public class HUD : MonoBehaviour
 {
 
     public Level level;
+    public GameOver gameOver;
 
     public TextMeshProUGUI ScoreText;
     public UnityEngine.UI.Image[] Stars;
 
     private int starId = 0;
-    public bool isGameOver = false;
 
 
     // Start is called before the first frame update
@@ -72,7 +72,10 @@ public class HUD : MonoBehaviour
 
     public void OnGameWin()
     {
-        isGameOver = true;
+        gameOver.ShowWin(level.currentScore, starId);
+        if (starId > PlayerPrefs.GetInt(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, 0)) {
+            PlayerPrefs.SetInt(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, starId);
+        }
     }
 
 }
