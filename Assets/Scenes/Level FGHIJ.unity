@@ -181,7 +181,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1638428596672494317, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
   m_PrefabInstance: {fileID: 6736282392877482074}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 6736282392877482075}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e79127fdea4007f498437778c541eaa6, type: 3}
@@ -381,6 +381,7 @@ MonoBehaviour:
   scoreSecondStar: 12000
   scoreThirdStar: 15000
   progress: {fileID: 989331160}
+  currentScore: 0
 --- !u!4 &607573326
 Transform:
   m_ObjectHideFlags: 0
@@ -720,6 +721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94b63c83617e067429fc0ad6824d4617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttons: []
 --- !u!1 &1565280276
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,6 +835,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1809279994}
   - component: {fileID: 1809279993}
+  - component: {fileID: 1809279995}
   m_Layer: 0
   m_Name: Provincie_BG
   m_TagString: Untagged
@@ -907,6 +910,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1809279995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809279992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1740da11dc027e744abb48e7cc743009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6736282392877482074
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1003,6 +1018,10 @@ PrefabInstance:
       propertyPath: level
       value: 
       objectReference: {fileID: 607573325}
+    - target: {fileID: 1638428596672494317, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
+      propertyPath: ScoreText
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1802810781711694092, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1180,8 +1199,28 @@ PrefabInstance:
     - {fileID: 3552082283742363761, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
     - {fileID: 7299268133532321531, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3368104979405622836, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6736282392877482076}
   m_SourcePrefab: {fileID: 100100000, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
+--- !u!1 &6736282392877482075 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3368104979405622836, guid: 6443448a3cb10b34daa694cd0f72ff13, type: 3}
+  m_PrefabInstance: {fileID: 6736282392877482074}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6736282392877482076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6736282392877482075}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1740da11dc027e744abb48e7cc743009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

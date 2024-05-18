@@ -169,12 +169,12 @@ public class GridManager : MonoBehaviour
         }
 
         // Ensure that there are possible matches after refilling
-        EnsureMatchesPossible();
+        //EnsureMatchesPossible();
 
         return movedPiece;
     }
 
-    private void EnsureMatchesPossible()
+    /*private void EnsureMatchesPossible()
     {
         // Check if there are any possible matches
         for (int x = 0; x < xDim; x++)
@@ -199,10 +199,10 @@ public class GridManager : MonoBehaviour
 
         // If no possible matches, adjust the grid to create one
         CreateForcedMatch();
-    }
+    }*/
 
 
-    private void CreateForcedMatch()
+    /*private void CreateForcedMatch()
     {
         // Find two adjacent pieces and force a match by swapping their letters
         for (int x = 0; x < xDim - 1; x++)
@@ -223,18 +223,18 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 
-    private void SwapLetters(GamePiece piece1, GamePiece piece2)
+    /*private void SwapLetters(GamePiece piece1, GamePiece piece2)
     {
         // Swap the letters of two pieces to create a match
         LetterPiece.LetterType tempLetter = piece1.LetterComponent.Letter;
         piece1.LetterComponent.SetLetter(piece2.LetterComponent.Letter);
         piece2.LetterComponent.SetLetter(tempLetter);
-    }
+    }*/
 
 
-    private bool SimulateSwapAndCheck(GamePiece piece1, GamePiece piece2)
+    /*private bool SimulateSwapAndCheck(GamePiece piece1, GamePiece piece2)
     {
         // Simulate the swap
         SimulateSwapPieces(piece1, piece2);
@@ -246,9 +246,9 @@ public class GridManager : MonoBehaviour
         SimulateSwapPieces(piece1, piece2);
 
         return matchFound;
-    }
+    }*/
 
-    private void SimulateSwapPieces(GamePiece piece1, GamePiece piece2)
+    /*private void SimulateSwapPieces(GamePiece piece1, GamePiece piece2)
     {
         // Temporarily swap the coordinates of two pieces for match checking
         int tempX = piece1.X;
@@ -261,7 +261,7 @@ public class GridManager : MonoBehaviour
         // Swap pieces in the array
         pieces[piece1.X, piece1.Y] = piece1;
         pieces[piece2.X, piece2.Y] = piece2;
-    }
+    }*/
 
 
 
