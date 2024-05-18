@@ -7,7 +7,9 @@ using UnityEngine;
 using static LetterPiece;
 
 public class GridManager : MonoBehaviour
-{   
+{
+    private bool isCheckingMatches = false;
+    private float debounceDelay =0.1f;
     public enum PieceType
     {
         A, B, COUNT, EMPTY
@@ -46,6 +48,8 @@ public class GridManager : MonoBehaviour
 
     private GamePiece pressedPiece;
     private GamePiece enteredPiece;
+
+    private HUD hud;
 
     private bool gameOver = false;
 
@@ -104,7 +108,24 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+ /*       if (!isCheckingMatches && IsBoardFull())
+        {
+            StartCoroutine(DebouncedMatchCheck());
+        }*/
+    }
+
+    private IEnumerator DebouncedMatchCheck()
+    {
+        isCheckingMatches = true;
+        yield return new WaitForSeconds(debounceDelay);
+
+        // Now perform the match check
+        bool matchesFound = CanMakeMatchingSwap();
+
+        // Log the result or perform any other actions
+        Debug.Log("Matches found: " + matchesFound);
+
+        isCheckingMatches = false;
     }
 
     public IEnumerator Fill()
@@ -167,103 +188,8 @@ public class GridManager : MonoBehaviour
                 movedPiece = true;
             }
         }
-
-        // Ensure that there are possible matches after refilling
-        //EnsureMatchesPossible();
-
         return movedPiece;
     }
-
-    /*private void EnsureMatchesPossible()
-    {
-        // Check if there are any possible matches
-        for (int x = 0; x < xDim; x++)
-        {
-            for (int y = 0; y < yDim; y++)
-            {
-                GamePiece piece = pieces[x, y];
-
-                if (piece.IsLetter())
-                {
-                    // Check adjacent pieces for possible matches
-                    if ((x < xDim - 1 && SimulateSwapAndCheck(piece, pieces[x + 1, y])) || // Check right
-                        (y < yDim - 1 && SimulateSwapAndCheck(piece, pieces[x, y + 1])) || // Check down
-                        (x > 0 && SimulateSwapAndCheck(piece, pieces[x - 1, y])) || // Check left
-                        (y > 0 && SimulateSwapAndCheck(piece, pieces[x, y - 1])))   // Check up
-                    {
-                        return; // If a match is possible, return
-                    }
-                }
-            }
-        }
-
-        // If no possible matches, adjust the grid to create one
-        CreateForcedMatch();
-    }*/
-
-
-    /*private void CreateForcedMatch()
-    {
-        // Find two adjacent pieces and force a match by swapping their letters
-        for (int x = 0; x < xDim - 1; x++)
-        {
-            for (int y = 0; y < yDim - 1; y++)
-            {
-                if (pieces[x, y].IsLetter() && pieces[x + 1, y].IsLetter())
-                {
-                    // Swap letters of two adjacent pieces
-                    SwapLetters(pieces[x, y], pieces[x + 1, y]);
-                    return;
-                }
-                if (pieces[x, y].IsLetter() && pieces[x, y + 1].IsLetter())
-                {
-                    // Swap letters of two adjacent pieces
-                    SwapLetters(pieces[x, y], pieces[x, y + 1]);
-                    return;
-                }
-            }
-        }
-    }*/
-
-    /*private void SwapLetters(GamePiece piece1, GamePiece piece2)
-    {
-        // Swap the letters of two pieces to create a match
-        LetterPiece.LetterType tempLetter = piece1.LetterComponent.Letter;
-        piece1.LetterComponent.SetLetter(piece2.LetterComponent.Letter);
-        piece2.LetterComponent.SetLetter(tempLetter);
-    }*/
-
-
-    /*private bool SimulateSwapAndCheck(GamePiece piece1, GamePiece piece2)
-    {
-        // Simulate the swap
-        SimulateSwapPieces(piece1, piece2);
-
-        // Check if the swap results in a match
-        bool matchFound = GetMatch(piece1, piece1.X, piece1.Y) != null || GetMatch(piece2, piece2.X, piece2.Y) != null;
-
-        // Swap back the pieces
-        SimulateSwapPieces(piece1, piece2);
-
-        return matchFound;
-    }*/
-
-    /*private void SimulateSwapPieces(GamePiece piece1, GamePiece piece2)
-    {
-        // Temporarily swap the coordinates of two pieces for match checking
-        int tempX = piece1.X;
-        int tempY = piece1.Y;
-        piece1.X = piece2.X;
-        piece1.Y = piece2.Y;
-        piece2.X = tempX;
-        piece2.Y = tempY;
-
-        // Swap pieces in the array
-        pieces[piece1.X, piece1.Y] = piece1;
-        pieces[piece2.X, piece2.Y] = piece2;
-    }*/
-
-
 
     public Vector2 GetWorldPosition(int x, int y)
     {
@@ -557,9 +483,127 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
+    private bool CheckForMatches(int x, int y)
+    {
+        GamePiece piece = pieces[x, y];
+        if (!piece.IsLetter())
+        {
+            // No match possible if the piece is not a letter
+            return false;
+        }
+
+        LetterType letter = piece.LetterComponent.Letter;
+
+        // Check horizontally
+        int horizontalMatchCount = CountMatchesInDirection(x, y, 1, 0, letter) +
+                                   CountMatchesInDirection(x, y, -1, 0, letter) + 1; // Include the center piece
+
+        // Check vertically
+        int verticalMatchCount = CountMatchesInDirection(x, y, 0, 1, letter) +
+                                 CountMatchesInDirection(x, y, 0, -1, letter) + 1; // Include the center piece
+
+        // Check if there is a match horizontally or vertically
+        return horizontalMatchCount >= 3 || verticalMatchCount >= 3;
+    }
+
+    private int CountMatchesInDirection(int startX, int startY, int dx, int dy, LetterType letter)
+    {
+        int matchCount = 0;
+        int currentX = startX + dx;
+        int currentY = startY + dy;
+
+        while (currentX >= 0 && currentX < xDim && currentY >= 0 && currentY < yDim)
+        {
+            GamePiece currentPiece = pieces[currentX, currentY];
+            if (!currentPiece.IsLetter() || currentPiece.LetterComponent.Letter != letter)
+            {
+                break; // Stop counting if the piece is not a letter or doesn't match the given letter
+            }
+            matchCount++;
+            currentX += dx;
+            currentY += dy;
+        }
+
+        return matchCount;
+    }
+
+    private bool CanMakeMatchingSwap()
+    {
+        for (int x = 0; x < xDim; x++)
+        {
+            for (int y = 0; y < yDim; y++)
+            {
+                    // Check swapping with the right neighbor
+                    if (x < xDim - 1)
+                    {
+                        SwapPieces(x, y, x + 1, y);
+                        if (CheckForMatches(x, y) || CheckForMatches(x + 1, y))
+                        {
+                            UndoSwap(x, y, x + 1, y); // Undo the swap
+                            return true;
+                        }
+                        UndoSwap(x, y, x + 1, y); // Undo the swap
+                    }
+
+                    // Check swapping with the bottom neighbor
+                    if (y < yDim - 1)
+                    {
+                        SwapPieces(x, y, x, y + 1);
+                        if (CheckForMatches(x, y) || CheckForMatches(x, y + 1))
+                        {
+                            UndoSwap(x, y, x, y + 1); // Undo the swap
+                            return true;
+                        }
+                        UndoSwap(x, y, x, y + 1); // Undo the swap
+                    }
+
+                }
+            }
+        // No matching swap found
+        return false;
+    }
+
+
+    private void SwapPieces(int x1, int y1, int x2, int y2)
+    {
+        // Swap the pieces at positions (x1, y1) and (x2, y2)
+        GamePiece temp = pieces[x1, y1];
+        pieces[x1, y1] = pieces[x2, y2];
+        pieces[x2, y2] = temp;
+    }
+
+    private void UndoSwap(int x1, int y1, int x2, int y2)
+    {
+        // Undo the swap by swapping the pieces back
+        SwapPieces(x1, y1, x2, y2);
+    }
+
+
+
+    
+
+
+    bool IsBoardFull()
+    {
+        // Check if every grid cell is occupied by a piece
+        for (int x = 0; x < xDim; x++)
+        {
+            for (int y = 0; y < yDim; y++)
+            {
+                if (pieces[x, y].Type == PieceType.EMPTY)
+                {
+                    // Found an empty cell, so the board is not full
+                    return false;
+                }
+            }
+        }
+        // No empty cells found, so the board is full
+        return true;
+    }
+
     public void GameOver()
     {
-        gameOver = true;
+        hud.OnGameWin();
     }
 
 }

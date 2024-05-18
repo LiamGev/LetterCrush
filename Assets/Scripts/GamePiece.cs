@@ -7,6 +7,8 @@ public class GamePiece : MonoBehaviour
 
     public int score;
 
+    private TouchHandler touchHandler;
+
     private int x;
     private int y;
     
