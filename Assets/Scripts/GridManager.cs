@@ -166,12 +166,12 @@ public class GridManager : MonoBehaviour
         }
 
         // Ensure that there are possible matches after refilling
-        EnsureMatchesPossible();
+      //  EnsureMatchesPossible();
 
         return movedPiece;
     }
 
-    private void EnsureMatchesPossible()
+   /* private void EnsureMatchesPossible()
     {
         // Check if there are any possible matches
         for (int x = 0; x < xDim; x++)
@@ -258,7 +258,7 @@ public class GridManager : MonoBehaviour
         // Swap pieces in the array
         pieces[piece1.X, piece1.Y] = piece1;
         pieces[piece2.X, piece2.Y] = piece2;
-    }
+    }*/
 
 
 
