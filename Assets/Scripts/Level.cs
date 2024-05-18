@@ -21,13 +21,10 @@ public class Level : MonoBehaviour
     public int scoreSecondStar;
     public int scoreThirdStar;
 
-<<<<<<< HEAD
-    public Slider progress;
 
-    protected int currentScore;
-=======
+    public Slider progress;
     public int currentScore;
->>>>>>> GameBranch
+
 
     protected LevelType type;
 
