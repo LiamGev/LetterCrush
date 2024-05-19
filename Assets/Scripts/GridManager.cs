@@ -10,6 +10,8 @@ public class GridManager : MonoBehaviour
 {
     private bool isCheckingMatches = false;
     private float debounceDelay =0.1f;
+    private bool isBoardInitialized = false;
+
     public enum PieceType
     {
         A, B, COUNT, EMPTY
@@ -59,41 +61,41 @@ public class GridManager : MonoBehaviour
     {
         prefabDict = new Dictionary<PieceType, GameObject>();
 
-        for(int i = 0; i < piecePrefabs.Length; i++)
+        for (int i = 0; i < piecePrefabs.Length; i++)
         {
-            if (!prefabDict.ContainsKey(piecePrefabs[i].type)){
+            if (!prefabDict.ContainsKey(piecePrefabs[i].type))
+            {
                 prefabDict.Add(piecePrefabs[i].type, piecePrefabs[i].prefab);
             }
         }
-        
-        for(int x = 0; x < xDim; x++)
+
+        for (int x = 0; x < xDim; x++)
         {
-            for(int y = 0; y < yDim; y++)
+            for (int y = 0; y < yDim; y++)
             {
-                GameObject background = Instantiate(backgroundPrefab, GetWorldPosition(x,y), Quaternion.identity);
+                GameObject background = Instantiate(backgroundPrefab, GetWorldPosition(x, y), Quaternion.identity);
                 background.transform.parent = transform;
             }
         }
 
         pieces = new GamePiece[xDim, yDim];
 
-        for(int i = 0; i < initialPieces.Length; i++)
+        for (int i = 0; i < initialPieces.Length; i++)
         {
             if (initialPieces[i].x >= 0 && initialPieces[i].x < xDim && initialPieces[i].y >= 0 && initialPieces[i].y < yDim)
             {
                 SpawnNewPiece(initialPieces[i].x, initialPieces[i].y, initialPieces[i].type);
             }
         }
-        
-        for(int x = 0; x < xDim; x++)
+
+        for (int x = 0; x < xDim; x++)
         {
-            for(int y = 0; y < yDim; y++)
+            for (int y = 0; y < yDim; y++)
             {
-                if (pieces[x,y] == null)
+                if (pieces[x, y] == null)
                 {
                     SpawnNewPiece(x, y, PieceType.EMPTY);
                 }
-               
             }
         }
 
@@ -108,10 +110,10 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
- /*       if (!isCheckingMatches && IsBoardFull())
+        if (!isCheckingMatches && IsBoardFull())
         {
             StartCoroutine(DebouncedMatchCheck());
-        }*/
+        }
     }
 
     private IEnumerator DebouncedMatchCheck()
@@ -485,6 +487,11 @@ public class GridManager : MonoBehaviour
 
     private bool CheckForMatches(int x, int y)
     {
+        if (pieces[x, y] == null)
+        {
+            return false;
+        }
+
         GamePiece piece = pieces[x, y];
         if (!piece.IsLetter())
         {
@@ -492,18 +499,22 @@ public class GridManager : MonoBehaviour
             return false;
         }
 
-        LetterType letter = piece.LetterComponent.Letter;
+        return CheckLineForMatches(x, y, 1, 0) || CheckLineForMatches(x, y, 0, 1);
+    }
 
-        // Check horizontally
-        int horizontalMatchCount = CountMatchesInDirection(x, y, 1, 0, letter) +
-                                   CountMatchesInDirection(x, y, -1, 0, letter) + 1; // Include the center piece
+    private bool CheckLineForMatches(int startX, int startY, int dx, int dy)
+    {
+        LetterType letter = pieces[startX, startY].LetterComponent.Letter;
+        int matchCount = 1;
 
-        // Check vertically
-        int verticalMatchCount = CountMatchesInDirection(x, y, 0, 1, letter) +
-                                 CountMatchesInDirection(x, y, 0, -1, letter) + 1; // Include the center piece
+        // Check in the positive direction
+        matchCount += CountMatchesInDirection(startX, startY, dx, dy, letter);
 
-        // Check if there is a match horizontally or vertically
-        return horizontalMatchCount >= 3 || verticalMatchCount >= 3;
+        // Check in the negative direction
+        matchCount += CountMatchesInDirection(startX, startY, -dx, -dy, letter);
+
+        // Include the starting piece in the count
+        return matchCount >= 3;
     }
 
     private int CountMatchesInDirection(int startX, int startY, int dx, int dy, LetterType letter)
@@ -527,41 +538,48 @@ public class GridManager : MonoBehaviour
         return matchCount;
     }
 
+
     private bool CanMakeMatchingSwap()
     {
         for (int x = 0; x < xDim; x++)
         {
             for (int y = 0; y < yDim; y++)
             {
-                    // Check swapping with the right neighbor
-                    if (x < xDim - 1)
+                // Check swapping with the right neighbor
+                if (x < xDim - 1)
+                {
+                    SwapPieces(x, y, x + 1, y);
+
+                    if (CheckForMatches(x, y) || CheckForMatches(x + 1, y))
                     {
-                        SwapPieces(x, y, x + 1, y);
-                        if (CheckForMatches(x, y) || CheckForMatches(x + 1, y))
-                        {
-                            UndoSwap(x, y, x + 1, y); // Undo the swap
-                            return true;
-                        }
                         UndoSwap(x, y, x + 1, y); // Undo the swap
+                        Debug.Log($"Found matching swap at ({x}, {y}) and ({x + 1}, {y})");
+                        return true;
                     }
+                    UndoSwap(x, y, x + 1, y); // Undo the swap
+                }
 
-                    // Check swapping with the bottom neighbor
-                    if (y < yDim - 1)
+                // Check swapping with the bottom neighbor
+                if (y < yDim - 1)
+                {
+                    SwapPieces(x, y, x, y + 1);
+
+                    if (CheckForMatches(x, y) || CheckForMatches(x, y + 1))
                     {
-                        SwapPieces(x, y, x, y + 1);
-                        if (CheckForMatches(x, y) || CheckForMatches(x, y + 1))
-                        {
-                            UndoSwap(x, y, x, y + 1); // Undo the swap
-                            return true;
-                        }
                         UndoSwap(x, y, x, y + 1); // Undo the swap
+                        Debug.Log($"Found matching swap at ({x}, {y}) and ({x}, {y + 1})");
+                        return true;
                     }
-
+                    UndoSwap(x, y, x, y + 1); // Undo the swap
                 }
             }
+        }
+
         // No matching swap found
         return false;
     }
+
+
 
 
     private void SwapPieces(int x1, int y1, int x2, int y2)

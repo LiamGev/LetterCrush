@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &214208093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,13 +153,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startLetter: 0
-  endLetter: 0
-  xDim: 0
-  yDim: 0
+  endLetter: 5
+  xDim: 5
+  yDim: 5
   fillTime: 0
-  level: {fileID: 0}
-  piecePrefabs: []
-  backgroundPrefab: {fileID: 0}
+  level: {fileID: 607573325}
+  piecePrefabs:
+  - type: 3
+    prefab: {fileID: 2005122763392692978, guid: 09f6aec4072a26744a5e29e7cd763fea, type: 3}
+  - type: 0
+    prefab: {fileID: 495319387783778680, guid: d057811c2b3c47d429a5eca5033cda34, type: 3}
+  backgroundPrefab: {fileID: 4214119903204570986, guid: f00c0f2eafeed0f4682ecbcd720db720, type: 3}
   initialPieces: []
 --- !u!4 &214208094
 Transform:
