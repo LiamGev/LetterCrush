@@ -8,7 +8,6 @@ public class HUD : MonoBehaviour
 
     public Level level;
     public GameOver gameOver;
-
     public TextMeshProUGUI ScoreText;
     public UnityEngine.UI.Image[] Stars;
 

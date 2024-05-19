@@ -10,7 +10,6 @@ public class GridManager : MonoBehaviour
 {
     private bool isCheckingMatches = false;
     private float debounceDelay =0.1f;
-    private bool isBoardInitialized = false;
 
     public enum PieceType
     {
@@ -51,7 +50,7 @@ public class GridManager : MonoBehaviour
     private GamePiece pressedPiece;
     private GamePiece enteredPiece;
 
-    private HUD hud;
+    public HUD hud;
 
     private bool gameOver = false;
 
@@ -110,10 +109,7 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isCheckingMatches && IsBoardFull())
-        {
-            StartCoroutine(DebouncedMatchCheck());
-        }
+
     }
 
     private IEnumerator DebouncedMatchCheck()
@@ -128,6 +124,11 @@ public class GridManager : MonoBehaviour
         Debug.Log("Matches found: " + matchesFound);
 
         isCheckingMatches = false;
+
+        if (!matchesFound)
+        {
+            GameOver();
+        }
     }
 
     public IEnumerator Fill()
@@ -144,6 +145,11 @@ public class GridManager : MonoBehaviour
             }
             
             needsFill = ClearAllMatches();
+
+            if (!isCheckingMatches && IsBoardFull())
+            {
+                StartCoroutine(DebouncedMatchCheck());
+            }
         }
     }
 
