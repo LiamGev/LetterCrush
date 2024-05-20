@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class SceneLoader : MonoBehaviour
     {
         public GameObject gameObject;
         public string playerPrefKey;
+        public Sprite noStar;
+        public Sprite Star;
     }
 
     public ButtonPlayerPrefs[] buttons;
@@ -21,16 +24,24 @@ public class SceneLoader : MonoBehaviour
         {
             int score = PlayerPrefs.GetInt(buttons[i].playerPrefKey, 0);
 
+
+            Image buttonImage = buttons[i].gameObject.GetComponent<Image>();
+
+            if (buttonImage == null)
+            {
+                buttonImage = buttons[i].gameObject.GetComponentInChildren<Image>();
+            }
+
             for (int starId = 1; starId <= 3;  starId++)
             {
                 Transform star = buttons[i].gameObject.transform.Find("star" + starId);
 
                 if (starId <= score)
                 {
-                    star.gameObject.SetActive(true);
+                    buttonImage.sprite = buttons[i].Star;
                 } else
                 {
-                    star.gameObject.SetActive(false);
+                    buttonImage.sprite = buttons[i].noStar;
                 }
             }
         }

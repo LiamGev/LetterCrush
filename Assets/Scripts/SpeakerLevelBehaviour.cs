@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,7 @@ public class SpeakerLevelBehaviour : MonoBehaviour
 
         if (streak == goal)
         {
+            PlayerPrefs.SetInt(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, 3);
             EndScreen.SetActive(true);
             Debug.Log("level completed");
         }

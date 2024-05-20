@@ -43,6 +43,7 @@ public class GridManager : MonoBehaviour
     public PiecePrefab[] piecePrefabs;
     public GameObject backgroundPrefab;
     public PiecePosition[] initialPieces;
+    public GameObject endScreen;
 
     private Dictionary<PieceType, GameObject> prefabDict;
     private GamePiece[,] pieces;
@@ -127,6 +128,7 @@ public class GridManager : MonoBehaviour
 
         if (!matchesFound)
         {
+            endScreen.SetActive(true);
             GameOver();
         }
     }
@@ -491,7 +493,7 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-    private bool CheckForMatches(int x, int y)
+    public bool CheckForMatches(int x, int y)
     {
         if (pieces[x, y] == null)
         {
@@ -508,7 +510,7 @@ public class GridManager : MonoBehaviour
         return CheckLineForMatches(x, y, 1, 0) || CheckLineForMatches(x, y, 0, 1);
     }
 
-    private bool CheckLineForMatches(int startX, int startY, int dx, int dy)
+    public bool CheckLineForMatches(int startX, int startY, int dx, int dy)
     {
         LetterType letter = pieces[startX, startY].LetterComponent.Letter;
         int matchCount = 1;
@@ -523,7 +525,7 @@ public class GridManager : MonoBehaviour
         return matchCount >= 3;
     }
 
-    private int CountMatchesInDirection(int startX, int startY, int dx, int dy, LetterType letter)
+    public int CountMatchesInDirection(int startX, int startY, int dx, int dy, LetterType letter)
     {
         int matchCount = 0;
         int currentX = startX + dx;
@@ -545,7 +547,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-    private bool CanMakeMatchingSwap()
+    public bool CanMakeMatchingSwap()
     {
         for (int x = 0; x < xDim; x++)
         {
@@ -585,10 +587,7 @@ public class GridManager : MonoBehaviour
         return false;
     }
 
-
-
-
-    private void SwapPieces(int x1, int y1, int x2, int y2)
+    public void SwapPieces(int x1, int y1, int x2, int y2)
     {
         // Swap the pieces at positions (x1, y1) and (x2, y2)
         GamePiece temp = pieces[x1, y1];
@@ -596,16 +595,11 @@ public class GridManager : MonoBehaviour
         pieces[x2, y2] = temp;
     }
 
-    private void UndoSwap(int x1, int y1, int x2, int y2)
+    public void UndoSwap(int x1, int y1, int x2, int y2)
     {
         // Undo the swap by swapping the pieces back
         SwapPieces(x1, y1, x2, y2);
     }
-
-
-
-    
-
 
     bool IsBoardFull()
     {

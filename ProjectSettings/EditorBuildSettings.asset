@@ -19,8 +19,41 @@ EditorBuildSettings:
     guid: 584e4817e6dba8a4da489b5252ccc4b4
   - enabled: 1
     path: Assets/Scenes/Level ABCDE.unity
-    guid: 69daf6221d0564c49a2787ef6bec22be
+    guid: 6f57a84fb1020ad4eab9b9c1fa510207
+  - enabled: 1
+    path: Assets/Scenes/Level FGHIJ.unity
+    guid: 49b3d97413034a842a25676c97d4e946
+  - enabled: 1
+    path: Assets/Scenes/Level KLMNO.unity
+    guid: bcdcbefec1356ea4b89323a24e7dbba2
+  - enabled: 1
+    path: Assets/Scenes/Level PQRST.unity
+    guid: eef010cd97c828b49b94768163e71a42
+  - enabled: 1
+    path: Assets/Scenes/Level UVWXY.unity
+    guid: 4749916e099586942af7288da8a6dd91
+  - enabled: 1
+    path: Assets/Scenes/Level VWXYZ.unity
+    guid: b539aa1e92cf015479cd4f53c89a6047
   - enabled: 1
     path: Assets/Scenes/toetsLevel ABCD.unity
     guid: f7aeeccc57da3ac4b93eea9c2ef0f331
+  - enabled: 1
+    path: Assets/Scenes/toetsLevel EFGH.unity
+    guid: 65b55ebaade6b684082b9f1514481a4f
+  - enabled: 1
+    path: Assets/Scenes/toetsLevel IJKL.unity
+    guid: 28ab260eecdcd3f4582376421d244566
+  - enabled: 1
+    path: Assets/Scenes/toetsLevel MNOP.unity
+    guid: e5375fddb75f95a41bbb2c02faa06179
+  - enabled: 1
+    path: Assets/Scenes/toetsLevel QRST.unity
+    guid: 8983ce3700377cb418542003d2c273a7
+  - enabled: 1
+    path: Assets/Scenes/toetsLevel UVWX.unity
+    guid: bfdc67e2af213b348b157ef78bbce250
+  - enabled: 1
+    path: Assets/Scenes/toetsLevel YZTS.unity
+    guid: 6d80650776cc1024c826964d9c5a3339
   m_configObjects: {}
