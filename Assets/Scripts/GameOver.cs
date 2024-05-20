@@ -33,9 +33,9 @@ public class GameOver : MonoBehaviour
 
     public void ShowWin(int score, int starCount)
     {
-        if (gameWon) return; // Check if the game has already been won
+        if (gameWon) return; 
 
-        gameWon = true; // Set the flag to true to indicate the game has been won
+        gameWon = true; 
 
         Debug.Log("ShowWin called");
         screenParent.SetActive(true);
@@ -63,17 +63,15 @@ public class GameOver : MonoBehaviour
             yield break;
         }
 
-        // Reset all stars initially
         for (int i = 0; i < stars.Length; i++)
         {
             stars[i].enabled = false;
         }
 
-        // Ensure starCount is within the bounds of the stars array
         if (starCount >= stars.Length)
         {
             Debug.LogWarning("starCount exceeds the number of available stars");
-            starCount = stars.Length - 1; // Adjust starCount to avoid index out of range
+            starCount = stars.Length - 1; 
         }
 
         for (int i = 0; i <= starCount; i++)
@@ -93,7 +91,6 @@ public class GameOver : MonoBehaviour
             }
         }
 
-        // Enable the last star again since the loop above will disable it
         if (starCount < stars.Length)
         {
             stars[starCount].enabled = true;
@@ -114,7 +111,6 @@ public class GameOver : MonoBehaviour
 
     public void OnDoneClicked()
     {
-        //to do
         SceneManager.LoadScene("LevelOverview");
     }
 }

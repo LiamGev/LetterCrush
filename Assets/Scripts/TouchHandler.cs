@@ -14,20 +14,15 @@ public class TouchHandler : MonoBehaviour
 
     void Update()
     {
-        // Check if there are any touches
         if (Input.touchCount > 0)
         {
-            // Get the first touch
             Touch touch = Input.GetTouch(0);
 
-            // Convert touch position to ray
             Ray ray = Camera.main.ScreenPointToRay(touch.position);
             RaycastHit hit;
 
-            // Check if the ray hits any collider
             if (Physics.Raycast(ray, out hit))
             {
-                // Check if the hit object is this object
                 if (hit.transform == transform)
                 {
                     if (touch.phase == TouchPhase.Began)
@@ -59,7 +54,6 @@ public class TouchHandler : MonoBehaviour
 
     void OnTouchEnter()
     {
-        // Mimics OnMouseEnter
         if (gamePiece != null)
         {
             grid.Enter(gamePiece);
@@ -68,7 +62,6 @@ public class TouchHandler : MonoBehaviour
 
     void OnTouchDown()
     {
-        // Mimics OnMouseDown
         if (gamePiece != null)
         {
             grid.Press(gamePiece);
@@ -77,7 +70,6 @@ public class TouchHandler : MonoBehaviour
 
     void OnTouchUp()
     {
-        // Mimics OnMouseUp
         grid.Release();
     }
 }

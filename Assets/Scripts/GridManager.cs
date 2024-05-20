@@ -582,14 +582,12 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
         // No matching swap found
         return false;
     }
 
     public void SwapPieces(int x1, int y1, int x2, int y2)
     {
-        // Swap the pieces at positions (x1, y1) and (x2, y2)
         GamePiece temp = pieces[x1, y1];
         pieces[x1, y1] = pieces[x2, y2];
         pieces[x2, y2] = temp;
@@ -597,25 +595,21 @@ public class GridManager : MonoBehaviour
 
     public void UndoSwap(int x1, int y1, int x2, int y2)
     {
-        // Undo the swap by swapping the pieces back
         SwapPieces(x1, y1, x2, y2);
     }
 
     bool IsBoardFull()
     {
-        // Check if every grid cell is occupied by a piece
         for (int x = 0; x < xDim; x++)
         {
             for (int y = 0; y < yDim; y++)
             {
                 if (pieces[x, y].Type == PieceType.EMPTY)
                 {
-                    // Found an empty cell, so the board is not full
                     return false;
                 }
             }
         }
-        // No empty cells found, so the board is full
         return true;
     }
 
