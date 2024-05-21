@@ -1039,7 +1039,7 @@ MonoBehaviour:
     prefab: {fileID: 495319387783778680, guid: d057811c2b3c47d429a5eca5033cda34, type: 3}
   backgroundPrefab: {fileID: 4214119903204570986, guid: f00c0f2eafeed0f4682ecbcd720db720, type: 3}
   initialPieces: []
-  endScreen: {fileID: 0}
+  endScreen: {fileID: 648307202}
   hud: {fileID: 1151593339}
 --- !u!4 &924889223
 Transform:
